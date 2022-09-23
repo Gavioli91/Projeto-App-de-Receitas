@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { DRINKS_TOKEN_KEY, MEALS_TOKEN_KEY, USER_KEY } from '../utils/globalVariables';
 
 const MIN_PASSWORD_LENGTH = 6;
 
 function Login() {
+  const history = useHistory();
   const [input, setInput] = useState({ email: '', password: '' });
   const [enableButton, setSubmitButton] = useState(true);
 
@@ -21,12 +24,20 @@ function Login() {
     setInput({ ...input, [name]: value });
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    localStorage.setItem(USER_KEY, JSON.stringify({ email: input.email }));
+    localStorage.setItem(MEALS_TOKEN_KEY, 1);
+    localStorage.setItem(DRINKS_TOKEN_KEY, 1);
+    history.push('/meals');
+  };
+
   useEffect(() => {
     validateForm();
   });
 
   return (
-    <form>
+    <form onSubmit={ handleSubmit }>
       <label htmlFor="email-input">
         <input
           type="email"
