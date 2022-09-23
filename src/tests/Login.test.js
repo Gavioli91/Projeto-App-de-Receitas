@@ -4,12 +4,14 @@ import userEvent from '@testing-library/user-event';
 import renderWithRouter from './helpers/renderWithRouter';
 import App from '../App';
 
+const BUTTON_TEST_ID = 'password-input';
+
 describe('tests on Login screen', () => {
   it('should have three elements on the screen', () => {
     renderWithRouter(<App />);
 
     const loginInputEmail = screen.getByRole('textbox');
-    const loginInputPassword = screen.getByTestId('password-input');
+    const loginInputPassword = screen.getByTestId(BUTTON_TEST_ID);
     const loginButton = screen.getByRole('button', { name: /enter/i });
     expect(loginInputPassword).toBeDefined();
     expect(loginInputEmail).toBeDefined();
@@ -22,7 +24,7 @@ describe('tests on Login screen', () => {
     renderWithRouter(<App />);
 
     const loginInputEmail = screen.getByRole('textbox');
-    const loginInputPassword = screen.getByTestId('password-input');
+    const loginInputPassword = screen.getByTestId(BUTTON_TEST_ID);
     const loginButton = screen.getByRole('button', { name: /enter/i });
 
     userEvent.type(loginInputEmail, 'trybe@teste.com');
@@ -37,7 +39,7 @@ describe('tests on Login screen', () => {
     const { history } = renderWithRouter(<App />);
 
     const loginInputEmail = screen.getByRole('textbox');
-    const loginInputPassword = screen.getByTestId('password-input');
+    const loginInputPassword = screen.getByTestId(BUTTON_TEST_ID);
     const loginButton = screen.getByRole('button', { name: /enter/i });
 
     userEvent.type(loginInputEmail, 'tryber@teste.com');
