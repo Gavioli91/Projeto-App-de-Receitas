@@ -9,7 +9,7 @@ function Login() {
   const validateForm = () => {
     const { email, password } = input;
     const validateEmail = email.match(/\S+@\S+\.\S+/);
-    const validatePassword = password.length >= MIN_PASSWORD_LENGTH;
+    const validatePassword = password.length > MIN_PASSWORD_LENGTH;
     if (validateEmail && validatePassword) {
       setSubmitButton(false);
     } else {
