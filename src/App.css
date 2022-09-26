@@ -10,6 +10,14 @@
   width: 100%;
 }
 
+.footer-container {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  border: 1px solid red;
+  margin-bottom: 50px;
+}
+
 .rocksGlass {
   animation: shake 1s infinite ease;
   max-height: 80vh;
@@ -29,10 +37,10 @@
 }
 */
 
-.meals > .logo {
+.meals>.logo {
   animation: shake 1.5s infinite ease;
   color: aliceblue;
-  font-family: Montserrat , sans-serif;
+  font-family: Montserrat, sans-serif;
   font-size: 3em;
   font-weight: 900;
 }
