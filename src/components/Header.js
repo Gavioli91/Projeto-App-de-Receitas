@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
@@ -7,23 +7,30 @@ function Header() {
   const history = useHistory();
   const { location: { pathname } } = history;
 
-  let title = '';
-  let iconSearch = true;
+  const [searchInput, setSearchInput] = useState(false);
+  const [title, setTitle] = useState('');
+  const [iconSearch, setIconSearch] = useState(true);
 
-  if (pathname === '/meals') title = 'Meals';
-  if (pathname === '/drinks') title = 'Drinks';
-  if (pathname === '/profile') {
-    title = 'Profile';
-    iconSearch = false;
-  }
-  if (pathname === '/done-recipes') {
-    title = 'Done Recipes';
-    iconSearch = false;
-  }
-  if (pathname === '/favorite-recipes') {
-    title = 'Favorite Recipes';
-    iconSearch = false;
-  }
+  const checkTitle = () => {
+    if (pathname === '/meals') setTitle('Meals');
+    if (pathname === '/drinks') setTitle('Drinks');
+    if (pathname === '/profile') {
+      setTitle('Profile');
+      setIconSearch(false);
+    }
+    if (pathname === '/done-recipes') {
+      setTitle('Done Recipes');
+      setIconSearch(false);
+    }
+    if (pathname === '/favorite-recipes') {
+      setTitle('Favorite Recipes');
+      setIconSearch(false);
+    }
+  };
+
+  useEffect(() => {
+    checkTitle();
+  });
 
   return (
     <div>
@@ -31,17 +38,30 @@ function Header() {
         {title}
       </h1>
 
-      <img
+      <input
+        type="image"
         src={ profileIcon }
         alt="Profile icon"
         data-testid="profile-top-btn"
+        onClick={ () => {
+          history.push('/profile');
+        } }
       />
 
       {iconSearch && (
-        <img
+        <input
+          type="image"
           src={ searchIcon }
           alt="Search icon"
           data-testid="search-top-btn"
+          onClick={ () => setSearchInput((prevState) => !prevState) }
+        />
+      )}
+
+      {searchInput && (
+        <input
+          type="text"
+          data-testid="search-input"
         />
       )}
     </div>

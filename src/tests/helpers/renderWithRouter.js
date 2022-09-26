@@ -1,11 +1,16 @@
 import React from 'react';
 import { Router } from 'react-router-dom';
-import { createBrowserHistory } from 'history';
+import { createMemoryHistory } from 'history';
 import { render } from '@testing-library/react';
 import App from '../../App';
 
-const renderWithRouter = (path) => {
-  const history = createBrowserHistory();
+const renderWithRouter = (
+  path,
+  { initialEntries = ['/'],
+    history = createMemoryHistory({ initialEntries }),
+  } = {},
+) => {
+  // const history = createBrowserHistory();
   history.push(path);
   const { ...resources } = render(
     <Router history={ history }>

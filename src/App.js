@@ -1,26 +1,39 @@
 import React from 'react';
-import { Route, Switch, useHistory } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import './App.css';
 import Header from './components/Header';
 import Login from './pages/Login';
 import Meals from './pages/Meals';
+import Profile from './pages/Profile';
+import Drinks from './pages/Drinks';
+import DoneRecipes from './pages/DoneRecipes';
+import FavoriteRecipes from './pages/FavoriteRecipes';
 
 function App() {
-  const history = useHistory();
-  const { location: { pathname } } = history;
-
   return (
-    <>
-      {pathname === '/meals' && <Header />}
-      {pathname === '/drinks' && <Header />}
-      {pathname === '/profile' && <Header />}
-      {pathname === '/done-recipes' && <Header />}
-      {pathname === '/favorite-recipes' && <Header />}
-      <Switch>
-        <Route exact path="/" component={ Login } />
-        <Route exact path="/meals" component={ Meals } />
-      </Switch>
-    </>
+    <Switch>
+      <Route exact path="/" component={ Login } />
+
+      <Route exact path="/meals" component={ Meals }>
+        <Header />
+      </Route>
+
+      <Route exact path="/profile" component={ Profile }>
+        <Header />
+      </Route>
+
+      <Route exact path="/drinks" component={ Drinks }>
+        <Header />
+      </Route>
+
+      <Route exact path="/done-recipes" component={ DoneRecipes }>
+        <Header />
+      </Route>
+
+      <Route exact path="/favorite-recipes" component={ FavoriteRecipes }>
+        <Header />
+      </Route>
+    </Switch>
   );
 }
 
