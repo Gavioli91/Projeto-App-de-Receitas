@@ -10,6 +10,14 @@
   width: 100%;
 }
 
+.footer-container {
+  border: 1px solid red;
+  bottom: 0;
+  margin-bottom: 50px;
+  position: fixed;
+  width: 100%;
+}
+
 .rocksGlass {
   animation: shake 1s infinite ease;
   max-height: 80vh;

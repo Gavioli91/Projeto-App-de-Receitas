@@ -1,13 +1,13 @@
 import React from 'react';
 import Footer from '../components/Footer';
 
-function Meals() {
+function Drinks() {
   return (
     <div>
-      Meals
+      Drinks
       <Footer />
     </div>
   );
 }
 
-export default Meals;
+export default Drinks;
