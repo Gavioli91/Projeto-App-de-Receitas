@@ -4,7 +4,6 @@ import Footer from '../components/Footer';
 function Meals() {
   return (
     <div>
-      Meals
       <Footer />
     </div>
   );
