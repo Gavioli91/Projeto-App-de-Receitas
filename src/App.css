@@ -11,11 +11,11 @@
 }
 
 .footer-container {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
   border: 1px solid red;
+  bottom: 0;
   margin-bottom: 50px;
+  position: fixed;
+  width: 100%;
 }
 
 .rocksGlass {
@@ -37,10 +37,10 @@
 }
 */
 
-.meals>.logo {
+.meals > .logo {
   animation: shake 1.5s infinite ease;
   color: aliceblue;
-  font-family: Montserrat, sans-serif;
+  font-family: Montserrat , sans-serif;
   font-size: 3em;
   font-weight: 900;
 }
