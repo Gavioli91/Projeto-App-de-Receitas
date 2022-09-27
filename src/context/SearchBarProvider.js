@@ -25,6 +25,16 @@ function SearchBarProvider({ children }) {
     setSearchValue(value);
   };
 
+  const verifyLength = (arr, link) => {
+    if (link === 'drinks') {
+      if (arr.length === 1) {
+        history.push(`/${link}/${arr[0].idDrink}`);
+      }
+    } else if (arr.length === 1) {
+      history.push(`/${link}/${arr[0].idMeal}`);
+    }
+  };
+
   useEffect(() => console.log(recipes), [recipes]);
 
   const requestsMealsOrDrinks = async (filter) => {
@@ -32,11 +42,13 @@ function SearchBarProvider({ children }) {
       if (filter === 'ingredientRadioButton') {
         const response = await searchDrinksByIngridients(searchValue);
         setRecipes(response);
+        verifyLength(response.drinks, 'drinks');
       }
 
       if (filter === 'nameRadioButton') {
         const response = await searchDrinksByName(searchValue);
         setRecipes(response);
+        verifyLength(response.drinks, 'drinks');
       }
 
       if (filter === 'firstLetterRadioButton') {
@@ -49,11 +61,13 @@ function SearchBarProvider({ children }) {
       if (filter === 'ingredientRadioButton') {
         const response = await searchMealsByIngridients(searchValue);
         setRecipes(response);
+        verifyLength(response.meals, 'meals');
       }
 
       if (filter === 'nameRadioButton') {
         const response = await searchMealsByName(searchValue);
         setRecipes(response);
+        verifyLength(response.meals, 'meals');
       }
 
       if (filter === 'firstLetterRadioButton') {
