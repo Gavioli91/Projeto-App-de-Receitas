@@ -8,6 +8,7 @@ import { searchMealsByFirstLetter,
 import { searchDrinksByFirstLetter,
   searchDrinksByIngridients,
   searchDrinksByName } from '../utils/fetchDrinks';
+import { ERROR_MESSAGE } from '../utils/globalVariables';
 
 function SearchBarProvider({ children }) {
   const history = useHistory();
@@ -26,51 +27,62 @@ function SearchBarProvider({ children }) {
   };
 
   const verifyLength = (arr, link) => {
-    if (link === 'drinks') {
+    if (link === 'drinks' && arr) {
       if (arr.length === 1) {
         history.push(`/${link}/${arr[0].idDrink}`);
       }
-    } else if (arr.length === 1) {
-      history.push(`/${link}/${arr[0].idMeal}`);
+    } else if (link === 'meals' && arr) {
+      if (arr.length === 1) {
+        history.push(`/${link}/${arr[0].idMeal}`);
+      }
+    } else {
+      return false;
     }
   };
+
+  const verifyIfExistsError = ((response, route) => {
+    if (response === null) {
+      global.alert(ERROR_MESSAGE);
+      setRecipes([]);
+    } else {
+      setRecipes(response);
+      verifyLength(response, route);
+    }
+  });
 
   const requestsMealsOrDrinks = async (filter) => {
     if (pathname === '/drinks') {
       if (filter === 'ingredientRadioButton') {
         const response = await searchDrinksByIngridients(searchValue);
-        setRecipes(response);
-        verifyLength(response.drinks, 'drinks');
+        verifyIfExistsError(response, 'drinks');
       }
 
       if (filter === 'nameRadioButton') {
         const response = await searchDrinksByName(searchValue);
-        setRecipes(response);
-        verifyLength(response.drinks, 'drinks');
+        verifyIfExistsError(response, 'drinks');
       }
 
       if (filter === 'firstLetterRadioButton') {
         const response = await searchDrinksByFirstLetter(searchValue);
         setRecipes(response);
+        verifyLength(response, 'drinks');
       }
     }
 
     if (pathname === '/meals') {
       if (filter === 'ingredientRadioButton') {
         const response = await searchMealsByIngridients(searchValue);
-        setRecipes(response);
-        verifyLength(response.meals, 'meals');
+        verifyIfExistsError(response, 'meals');
       }
 
       if (filter === 'nameRadioButton') {
         const response = await searchMealsByName(searchValue);
-        setRecipes(response);
-        verifyLength(response.meals, 'meals');
+        verifyIfExistsError(response, 'meals');
       }
 
       if (filter === 'firstLetterRadioButton') {
         const response = await searchMealsByFirstLetter(searchValue);
-        setRecipes(response);
+        verifyIfExistsError(response, 'meals');
       }
     }
   };
@@ -81,6 +93,7 @@ function SearchBarProvider({ children }) {
 
   const contextValue = {
     recipes,
+    setRecipes,
     searchValue,
     filterCategory,
     handleChangeSearch,

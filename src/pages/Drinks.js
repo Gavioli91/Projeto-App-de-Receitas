@@ -1,22 +1,23 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import RecipesCards from '../components/RecipesCards';
+import SearchBarContext from '../context/SearchBarContext';
 import { DRINKS_RECIPES_END_POINT, MAX_FOOD_CARDS } from '../utils/globalVariables';
 import getRecipes from '../utils/recipesFetch';
 
 function Drinks() {
-  const [drinksRecipes, setDrinksRecipes] = useState([]);
+  const { recipes, setRecipes } = useContext(SearchBarContext);
 
   useEffect(() => {
     const drinkRecipesFetch = async () => {
       const response = await getRecipes(DRINKS_RECIPES_END_POINT);
-      setDrinksRecipes(response);
+      setRecipes(response);
     };
     drinkRecipesFetch();
-  });
+  }, []);
 
   return (
     <main>
-      {drinksRecipes.slice(0, MAX_FOOD_CARDS).map(({
+      {recipes && recipes.slice(0, MAX_FOOD_CARDS).map(({
         strDrinkThumb,
         idDrink,
         strDrink,
