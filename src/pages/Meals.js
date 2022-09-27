@@ -1,34 +1,71 @@
 import React, { useEffect, useState } from 'react';
-import RecipesCards from '../components/RecipesCards';
-import { MAX_FOOD_CARDS, MEALS_RECIPES_END_POINT } from '../utils/globalVariables';
-import getRecipes from '../utils/recipesFetch';
+import createMenu from '../utils/createMenu';
+import {
+  MEALS_CATEGORYS_END_POINT,
+  MEALS_RECIPES_END_POINT,
+  MIN_CATEGORY_LENGTH,
+} from '../utils/globalVariables';
+import { getRecipes, getRecipesFromCategory } from '../utils/recipesFetch';
 
 function Meals() {
   const [mealsRecipes, setMealsRecipes] = useState([]);
+  const [mealsCategorys, setMealsCategorys] = useState([]);
+  const [foodsCategory, setFoodsCategory] = useState([]);
 
   useEffect(() => {
     const mealsRecepiesFetch = async () => {
       const response = await getRecipes(MEALS_RECIPES_END_POINT);
       setMealsRecipes(response);
     };
+
+    const mealsCategoryFetch = async () => {
+      const response = await getRecipes(MEALS_CATEGORYS_END_POINT);
+      setMealsCategorys(response);
+    };
+
     mealsRecepiesFetch();
-  });
+    mealsCategoryFetch();
+  }, []);
+
+  const foodsFromCategory = async ({ target: { value } }) => {
+    const response = await getRecipesFromCategory(value, 'meals');
+    setFoodsCategory(response);
+  };
+
+  const clearFilters = () => {
+    setFoodsCategory([]);
+  };
 
   return (
     <main>
-      {mealsRecipes.slice(0, MAX_FOOD_CARDS).map(({
-        strMealThumb,
-        idMeal,
-        strMeal,
-      }, index) => (
-        <section key={ idMeal }>
-          <RecipesCards
-            thumb={ strMealThumb }
-            name={ strMeal }
-            index={ index }
+      <section>
+        <div>
+          {mealsCategorys.slice(0, MIN_CATEGORY_LENGTH).map(({ strCategory }) => (
+            <input
+              type="button"
+              key={ strCategory }
+              value={ strCategory }
+              id={ strCategory }
+              onClick={ foodsFromCategory }
+              name="categories"
+              data-testid={ `${strCategory}-category-filter` }
+            />
+          ))}
+          <input
+            type="button"
+            data-testid="All-category-filter"
+            onClick={ clearFilters }
+            value="All"
           />
-        </section>
-      ))}
+        </div>
+      </section>
+      <section>
+        {
+          foodsCategory.length === 0
+            ? createMenu(mealsRecipes)
+            : createMenu(foodsCategory)
+        }
+      </section>
     </main>
   );
 }
