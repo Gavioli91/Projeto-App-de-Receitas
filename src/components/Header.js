@@ -13,19 +13,25 @@ function Header() {
   const [iconSearch, setIconSearch] = useState(true);
 
   const checkTitle = () => {
-    if (pathname === '/meals') setTitle('Meals');
-    if (pathname === '/drinks') setTitle('Drinks');
-    if (pathname === '/profile') {
+    switch (pathname) {
+    case '/meals': return setTitle('Meals');
+    case '/drinks': return setTitle('Drinks');
+    case '/profile': {
       setTitle('Profile');
       setIconSearch(false);
+      return;
     }
-    if (pathname === '/done-recipes') {
+    case '/done-recipes': {
       setTitle('Done Recipes');
       setIconSearch(false);
+      return;
     }
-    if (pathname === '/favorite-recipes') {
+    case '/favorite-recipes': {
       setTitle('Favorite Recipes');
       setIconSearch(false);
+      return;
+    }
+    default: history.push('/notFound');
     }
   };
 
