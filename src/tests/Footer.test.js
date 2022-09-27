@@ -11,9 +11,11 @@ describe('Tests on Footer component', () => {
     const { location: { pathname } } = history;
     expect(pathname).toBe('/meals');
 
-    const bottomBtn = screen.getAllByRole('button', { type: 'image' });
-    expect(bottomBtn[0]).toHaveAttribute('src', DrinkIcon);
-    expect(bottomBtn[1]).toHaveAttribute('src', MealIcon);
+    const bottomMealsBtn = screen.getByRole('button', { name: 'meals screen' });
+    const bottomDrinksBtn = screen.getByRole('button', { name: 'drinks screen' });
+    expect(bottomDrinksBtn && bottomMealsBtn).toBeDefined();
+    expect(bottomDrinksBtn).toHaveAttribute('src', DrinkIcon);
+    expect(bottomMealsBtn).toHaveAttribute('src', MealIcon);
   });
 
   it('expects footer to have data-testid "footer"', () => {
@@ -25,10 +27,10 @@ describe('Tests on Footer component', () => {
   it('tests if drinks button when clicked redirect to "/drinks"', async () => {
     const { history } = renderWithRouter('/meals');
 
-    const bottomBtn = screen.getAllByRole('button', { type: 'image' });
+    const bottomDrinksBtn = screen.getByRole('button', { name: 'drinks screen' });
     expect(screen.getByText('Meals')).toBeDefined();
 
-    userEvent.click(bottomBtn[0]);
+    userEvent.click(bottomDrinksBtn);
 
     expect(screen.getByText('Drinks')).toBeDefined();
     const { location: { pathname } } = history;
@@ -39,10 +41,10 @@ describe('Tests on Footer component', () => {
   it('tests if meals button when clicked redirect to "/meals"', async () => {
     const { history } = renderWithRouter('/drinks');
 
-    const bottomBtn = screen.getAllByRole('button', { type: 'image' });
+    const bottomMealsBtn = screen.getByRole('button', { name: 'meals screen' });
     expect(screen.getByText('Drinks')).toBeDefined();
 
-    userEvent.click(bottomBtn[1]);
+    userEvent.click(bottomMealsBtn);
 
     expect(screen.getByText('Meals')).toBeDefined();
     const { location: { pathname } } = history;
