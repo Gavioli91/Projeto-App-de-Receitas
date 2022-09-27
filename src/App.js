@@ -17,9 +17,9 @@ function App() {
     <SearchBarProvider>
       <Switch>
         <Route exact path="/" component={ Login } />
-        <Route exact path="/meals" component={ Meals }>
+        <Route exact path="/meals" component={ Recipes }>
           <Header />
-          <Meals />
+          <Recipes />
           <Footer />
         </Route>
 
