@@ -1,19 +1,35 @@
+import { ERROR_MESSAGE } from './globalVariables';
+
 const BASE_URL = 'https://www.thecocktaildb.com/api/json/v1/1/';
 
 export const searchDrinksByIngridients = async (ingredient) => {
-  const request = await fetch(`${BASE_URL}filter.php?i=${ingredient}`);
-  const response = await request.json();
-  return response;
-};
-
-export const searchDrinksByFirstLetter = async (letter) => {
-  const request = await fetch(`${BASE_URL}search.php?f=${letter}`);
-  const response = await request.json();
-  return response;
+  try {
+    const request = await fetch(`${BASE_URL}filter.php?i=${ingredient}`);
+    const response = await request.json();
+    return response;
+  } catch {
+    global.alert(ERROR_MESSAGE);
+  }
 };
 
 export const searchDrinksByName = async (name) => {
-  const request = await fetch(`${BASE_URL}search.php?s=${name}`);
-  const response = await request.json();
-  return response;
+  try {
+    const request = await fetch(`${BASE_URL}search.php?s=${name}`);
+    const response = await request.json();
+    if (response.drinks === null) return global.alert(ERROR_MESSAGE);
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const searchDrinksByFirstLetter = async (letter) => {
+  try {
+    const request = await fetch(`${BASE_URL}search.php?f=${letter}`);
+    const response = await request.json();
+
+    return response;
+  } catch {
+    global.alert('Your search must have only 1 (one) character');
+  }
 };

@@ -1,11 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useHistory } from 'react-router-dom';
 import SearchBarContext from './SearchBarContext';
 import { searchMealsByFirstLetter,
   searchMealsByIngridients,
   searchMealsByName } from '../utils/fetchMeals';
+import { searchDrinksByFirstLetter,
+  searchDrinksByIngridients,
+  searchDrinksByName } from '../utils/fetchDrinks';
 
 function SearchBarProvider({ children }) {
+  const history = useHistory();
+  const { location: { pathname } } = history;
+
   const [recipes, setRecipes] = useState([]);
   const [searchValue, setSearchValue] = useState('');
   const [filterCategory, setFilterCategory] = useState('');
@@ -18,24 +25,46 @@ function SearchBarProvider({ children }) {
     setSearchValue(value);
   };
 
+  useEffect(() => console.log(recipes), [recipes]);
+
+  const requestsMealsOrDrinks = async (filter) => {
+    if (pathname === '/drinks') {
+      if (filter === 'ingredientRadioButton') {
+        const response = await searchDrinksByIngridients(searchValue);
+        setRecipes(response);
+      }
+
+      if (filter === 'nameRadioButton') {
+        const response = await searchDrinksByName(searchValue);
+        setRecipes(response);
+      }
+
+      if (filter === 'firstLetterRadioButton') {
+        const response = await searchDrinksByFirstLetter(searchValue);
+        setRecipes(response);
+      }
+    }
+
+    if (pathname === '/meals') {
+      if (filter === 'ingredientRadioButton') {
+        const response = await searchMealsByIngridients(searchValue);
+        setRecipes(response);
+      }
+
+      if (filter === 'nameRadioButton') {
+        const response = await searchMealsByName(searchValue);
+        setRecipes(response);
+      }
+
+      if (filter === 'firstLetterRadioButton') {
+        const response = await searchMealsByFirstLetter(searchValue);
+        setRecipes(response);
+      }
+    }
+  };
+
   const handleSearchButton = async (filter) => {
-    if (filter === 'ingredientRadioButton') {
-      const response = await searchMealsByIngridients(searchValue);
-      setRecipes(response);
-      console.log(recipes);
-    }
-
-    if (filter === 'nameRadioButton') {
-      const response = await searchMealsByName(searchValue);
-      setRecipes(response);
-      console.log(recipes);
-    }
-
-    if (filter === 'firstLetterRadioButton') {
-      const response = await searchMealsByFirstLetter(searchValue);
-      setRecipes(response);
-      console.log(recipes);
-    }
+    await requestsMealsOrDrinks(filter);
   };
 
   const contextValue = {
