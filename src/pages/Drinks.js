@@ -10,7 +10,8 @@ import { getRecipes, getRecipesFromCategory } from '../utils/recipesFetch';
 function Drinks() {
   const [drinksRecipes, setDrinksRecipes] = useState([]);
   const [drinksCategorys, setDrinksCategorys] = useState([]);
-  const [drinksCategory, setdrinksCategory] = useState([]);
+  const [drinksCategory, setDrinksCategory] = useState([]);
+  const [currentCategory, setCurrentCategory] = useState('');
 
   useEffect(() => {
     const drinkRecipesFetch = async () => {
@@ -28,12 +29,18 @@ function Drinks() {
   }, []);
 
   const drinksFromCategory = async ({ target: { value } }) => {
+    if (currentCategory === value) {
+      setDrinksCategory([]);
+      setCurrentCategory('');
+      return;
+    }
     const response = await getRecipesFromCategory(value, 'drinks');
-    setdrinksCategory(response);
+    setDrinksCategory(response);
+    setCurrentCategory(value);
   };
 
   const clearFilters = () => {
-    setdrinksCategory([]);
+    setDrinksCategory([]);
   };
 
   return (

@@ -11,6 +11,7 @@ function Meals() {
   const [mealsRecipes, setMealsRecipes] = useState([]);
   const [mealsCategorys, setMealsCategorys] = useState([]);
   const [foodsCategory, setFoodsCategory] = useState([]);
+  const [currentCategory, setCurrentCategory] = useState('');
 
   useEffect(() => {
     const mealsRecepiesFetch = async () => {
@@ -28,8 +29,14 @@ function Meals() {
   }, []);
 
   const foodsFromCategory = async ({ target: { value } }) => {
+    if (currentCategory === value) {
+      setFoodsCategory([]);
+      setCurrentCategory('');
+      return;
+    }
     const response = await getRecipesFromCategory(value, 'meals');
     setFoodsCategory(response);
+    setCurrentCategory(value);
   };
 
   const clearFilters = () => {
@@ -69,4 +76,5 @@ function Meals() {
     </main>
   );
 }
+
 export default Meals;
