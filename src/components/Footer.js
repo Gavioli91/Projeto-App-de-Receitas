@@ -24,7 +24,7 @@ function Footer() {
         type="image"
         onClick={ () => redirectTo('/meals') }
         src={ MealIcon }
-        alt="foods screen"
+        alt="meals screen"
         data-testid="meals-bottom-btn"
       />
     </footer>
