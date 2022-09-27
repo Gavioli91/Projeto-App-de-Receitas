@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import SearchBarContext from './SearchBarContext';
@@ -34,8 +34,6 @@ function SearchBarProvider({ children }) {
       history.push(`/${link}/${arr[0].idMeal}`);
     }
   };
-
-  useEffect(() => console.log(recipes), [recipes]);
 
   const requestsMealsOrDrinks = async (filter) => {
     if (pathname === '/drinks') {
@@ -82,6 +80,7 @@ function SearchBarProvider({ children }) {
   };
 
   const contextValue = {
+    recipes,
     searchValue,
     filterCategory,
     handleChangeSearch,
