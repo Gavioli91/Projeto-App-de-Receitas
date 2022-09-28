@@ -85,8 +85,8 @@ return (
       <section>
         {
           foodsCategory.length === 0
-            ? createMenu(recipes)
-            : createMenu(foodsCategory)
+            ? createMenu(recipes, 'meals')
+            : createMenu(foodsCategory, 'meals')
         }
       </section>
     </main>

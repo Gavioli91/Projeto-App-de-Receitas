@@ -70,8 +70,8 @@ function Drinks() {
       <section>
         {
           drinksCategory.length === 0
-            ? createMenu(recipes)
-            : createMenu(drinksCategory)
+            ? createMenu(recipes, 'drinks')
+            : createMenu(drinksCategory, 'drinks')
         }
       </section>
     </main>
