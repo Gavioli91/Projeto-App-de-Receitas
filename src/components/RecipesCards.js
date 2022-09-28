@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
+import RecipesDetailsContext from '../context/RecipesDetailsContext';
 
 function RecipesCards({ thumb, name, index, route, itemId }) {
+  const { setId, setRoute } = useContext(RecipesDetailsContext);
   const history = useHistory();
+
   const redirectToCardDetails = (routeParam, id) => {
+    setId(id);
+    setRoute(routeParam);
     history.push(`/${routeParam}/${id}`);
   };
 
