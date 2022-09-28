@@ -3,12 +3,13 @@ import { Route, Switch } from 'react-router-dom';
 import './App.css';
 import Header from './components/Header';
 import Login from './pages/Login';
-import Meals from './pages/Meals';
+// import Meals from './pages/Meals';
 import Profile from './pages/Profile';
 import Drinks from './pages/Drinks';
 import DoneRecipes from './pages/DoneRecipes';
 import FavoriteRecipes from './pages/FavoriteRecipes';
 import Footer from './components/Footer';
+import Recipes from './pages/Recipes';
 import SearchBarProvider from './context/SearchBarProvider';
 
 function App() {
@@ -16,9 +17,9 @@ function App() {
     <SearchBarProvider>
       <Switch>
         <Route exact path="/" component={ Login } />
-        <Route exact path="/meals" component={ Meals }>
+        <Route exact path="/meals" component={ Recipes }>
           <Header />
-          <Meals />
+          <Recipes />
           <Footer />
         </Route>
 
