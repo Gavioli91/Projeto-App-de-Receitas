@@ -9,9 +9,7 @@ function RecipeDetails() {
   const { url } = useRouteMatch();
 
   console.log(id);
-  const { dataRecipesDetails,
-    setDataRecipesDetails,
-  } = useContext(RecipesDetailsContext);
+  const { setDataRecipesDetails } = useContext(RecipesDetailsContext);
 
   useEffect(() => {
     const requestRecipesDetails = async () => {
