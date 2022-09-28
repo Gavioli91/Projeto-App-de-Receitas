@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import SearchBarContext from './SearchBarContext';
@@ -25,18 +25,28 @@ function SearchBarProvider({ children }) {
     setSearchValue(value);
   };
 
-  useEffect(() => console.log(recipes), [recipes]);
+  const verifyLength = (arr, link) => {
+    if (link === 'drinks') {
+      if (arr.length === 1) {
+        history.push(`/${link}/${arr[0].idDrink}`);
+      }
+    } else if (arr.length === 1) {
+      history.push(`/${link}/${arr[0].idMeal}`);
+    }
+  };
 
   const requestsMealsOrDrinks = async (filter) => {
     if (pathname === '/drinks') {
       if (filter === 'ingredientRadioButton') {
         const response = await searchDrinksByIngridients(searchValue);
         setRecipes(response);
+        verifyLength(response.drinks, 'drinks');
       }
 
       if (filter === 'nameRadioButton') {
         const response = await searchDrinksByName(searchValue);
         setRecipes(response);
+        verifyLength(response.drinks, 'drinks');
       }
 
       if (filter === 'firstLetterRadioButton') {
@@ -49,11 +59,13 @@ function SearchBarProvider({ children }) {
       if (filter === 'ingredientRadioButton') {
         const response = await searchMealsByIngridients(searchValue);
         setRecipes(response);
+        verifyLength(response.meals, 'meals');
       }
 
       if (filter === 'nameRadioButton') {
         const response = await searchMealsByName(searchValue);
         setRecipes(response);
+        verifyLength(response.meals, 'meals');
       }
 
       if (filter === 'firstLetterRadioButton') {
@@ -68,6 +80,7 @@ function SearchBarProvider({ children }) {
   };
 
   const contextValue = {
+    recipes,
     searchValue,
     filterCategory,
     handleChangeSearch,
