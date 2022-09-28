@@ -11,6 +11,7 @@ import FavoriteRecipes from './pages/FavoriteRecipes';
 import Footer from './components/Footer';
 import Recipes from './pages/Recipes';
 import SearchBarProvider from './context/SearchBarProvider';
+import RecipeInProgress from './pages/RecipeInProgress';
 
 function App() {
   return (
@@ -42,10 +43,14 @@ function App() {
           <Header />
         </Route>
 
-        <Route exact path="/meals/:id-da-receita" />
-        <Route exact path="/drinks/:id-da-receita" />
-        <Route exact path="/meals/:id-da-receita:/in-progress" />
-        <Route exact path="/drinks/:id-da-receita/in-progress" />
+        <Route exact path="/meals/:id" />
+        <Route exact path="/drinks/:id" />
+        <Route
+          exact
+          path="/meals/:id/in-progress"
+          component={ RecipeInProgress }
+        />
+        <Route exact path="/drinks/:id/in-progress" />
       </Switch>
     </SearchBarProvider>
   );
