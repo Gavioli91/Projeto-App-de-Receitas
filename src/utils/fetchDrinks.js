@@ -6,7 +6,7 @@ export const searchDrinksByIngridients = async (ingredient) => {
   try {
     const request = await fetch(`${BASE_URL}filter.php?i=${ingredient}`);
     const response = await request.json();
-    return response;
+    return response.drinks;
   } catch {
     global.alert(ERROR_MESSAGE);
   }
@@ -16,8 +16,7 @@ export const searchDrinksByName = async (name) => {
   try {
     const request = await fetch(`${BASE_URL}search.php?s=${name}`);
     const response = await request.json();
-    if (response.drinks === null) return global.alert(ERROR_MESSAGE);
-    return response;
+    return response.drinks;
   } catch (error) {
     console.log(error);
   }
@@ -27,8 +26,7 @@ export const searchDrinksByFirstLetter = async (letter) => {
   try {
     const request = await fetch(`${BASE_URL}search.php?f=${letter}`);
     const response = await request.json();
-
-    return response;
+    return response.drinks;
   } catch {
     global.alert('Your search must have only 1 (one) character');
   }

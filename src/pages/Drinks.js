@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import SearchBarContext from '../context/SearchBarContext';
 import createMenu from '../utils/createMenu';
 import {
   DRINKS_CATEGORYS_END_POINT,
@@ -8,7 +9,7 @@ import {
 import { getRecipes, getRecipesFromCategory } from '../utils/recipesFetch';
 
 function Drinks() {
-  const [drinksRecipes, setDrinksRecipes] = useState([]);
+  const { recipes, setRecipes } = useContext(SearchBarContext);
   const [drinksCategorys, setDrinksCategorys] = useState([]);
   const [drinksCategory, setDrinksCategory] = useState([]);
   const [currentCategory, setCurrentCategory] = useState('');
@@ -16,7 +17,7 @@ function Drinks() {
   useEffect(() => {
     const drinkRecipesFetch = async () => {
       const response = await getRecipes(DRINKS_RECIPES_END_POINT);
-      setDrinksRecipes(response);
+      setRecipes(response);
     };
 
     const drinkCategoryFetch = async () => {
@@ -69,7 +70,7 @@ function Drinks() {
       <section>
         {
           drinksCategory.length === 0
-            ? createMenu(drinksRecipes)
+            ? createMenu(recipes)
             : createMenu(drinksCategory)
         }
       </section>
