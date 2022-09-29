@@ -29,21 +29,6 @@ function Meals() {
     mealsCategoryFetch();
   }, []);
 
-  /*
-return (
-    <main className="mealsItems">
-      {recipes && recipes.slice(0, MAX_FOOD_CARDS).map(({
-        strMealThumb,
-        idMeal,
-        strMeal,
-      }, index) => (
-        <section key={ idMeal }>
-          <RecipesCards
-            thumb={ strMealThumb }
-            name={ strMeal }
-            index={ index }
-*/
-
   const foodsFromCategory = async ({ target: { value } }) => {
     if (currentCategory === value) {
       setFoodsCategory([]);

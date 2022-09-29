@@ -4,6 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 function RecipesCards({ thumb, name, index, route, itemId }) {
   const history = useHistory();
+
   const redirectToCardDetails = (routeParam, id) => {
     history.push(`/${routeParam}/${id}`);
   };
