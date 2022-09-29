@@ -6,7 +6,6 @@ import { MAX_CARDS_LENGTH } from '../utils/globalVariables';
 function RecomendationsCard() {
   const { meals, drinks } = useContext(RecipesDetailsContext);
   const { url } = useRouteMatch();
-  console.log(url);
 
   return (
     <div className="container">

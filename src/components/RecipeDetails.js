@@ -17,6 +17,7 @@ function RecipeDetails() {
   const { setDataRecipesDetails,
     setMeals,
     setDrinks,
+    getDoneRecipes,
   } = useContext(RecipesDetailsContext);
 
   useEffect(() => {
@@ -38,6 +39,9 @@ function RecipeDetails() {
       }
     };
 
+    const doneRecipesData = localStorage.getItem('doneRecipes');
+
+    if (JSON.parse(doneRecipesData) !== null) getDoneRecipes(id);
     requestRecipesDetails();
   }, []);
 
