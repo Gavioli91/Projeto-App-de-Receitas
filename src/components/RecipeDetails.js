@@ -7,8 +7,8 @@ function RecipeDetails() {
   const { id } = useParams();
   const { url } = useRouteMatch();
 
-  console.log(id);
-  const { dataRecipesDetails,
+  const {
+    dataRecipesDetails,
     setDataRecipesDetails,
   } = useContext(RecipesDetailsContext);
 
@@ -29,7 +29,7 @@ function RecipeDetails() {
   }, []);
 
   console.log(dataRecipesDetails);
-  return (<p>{route}</p>);
+  return (<p>ola</p>);
 }
 
 export default RecipeDetails;
