@@ -1,15 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useRouteMatch } from 'react-router-dom';
+import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import { getDrinksDetails, getMealsDetails } from '../utils/fetchRecipesDetails';
-import { setRecipeProgressInStore, getObjectInStore } from '../utils/localStorage';
+import { FAVORITE_RECIPES_KEY, IN_PROGRESS_RECIPES_KEY } from '../utils/globalVariables';
+import {
+  setRecipeProgressInStore,
+  getObjectInStore,
+  setFavoritesRecipesInStore,
+} from '../utils/localStorage';
+import shareButtonIcon from '../images/shareIcon.svg';
+import favoriteButtonIconActive from '../images/blackHeartIcon.svg';
+import favoriteButtonIconDisabled from '../images/whiteHeartIcon.svg';
 
 function RecipeInProgress() {
   const [recipeDetails, setRecipeDetails] = useState([]);
   const [ingredientsChecked, setIngredientsChecked] = useState([]);
   const [path, setPath] = useState('');
-
+  const [visibleItem, setVisibleItem] = useState({
+    share: false,
+    favorite: false,
+    enableFinishBtn: false,
+  });
   const { id } = useParams();
   const { url } = useRouteMatch();
+  const history = useHistory();
 
   useEffect(() => {
     const requestRecipesDetails = async () => {
@@ -30,13 +43,22 @@ function RecipeInProgress() {
   }, []);
 
   const updateIngredientsChecked = () => {
-    const ingredientsInStorage = getObjectInStore();
+    const ingredientsInStorage = getObjectInStore(IN_PROGRESS_RECIPES_KEY);
+
     if (url.includes('/meals')) setIngredientsChecked(ingredientsInStorage.meals[id]);
     if (url.includes('/drinks')) setIngredientsChecked(ingredientsInStorage.drinks[id]);
   };
 
+  const updateFavoritedRecipes = () => {
+    const favoritesRecipesInStorage = getObjectInStore(FAVORITE_RECIPES_KEY);
+
+    const checkFavorited = favoritesRecipesInStorage.some((recipe) => recipe.id === id);
+    setVisibleItem((prevState) => ({ ...prevState, favorite: checkFavorited }));
+  };
+
   useEffect(() => {
     updateIngredientsChecked();
+    updateFavoritedRecipes();
   }, []);
 
   const checkIngredient = (target, ingredient) => {
@@ -49,6 +71,41 @@ function RecipeInProgress() {
     setRecipeProgressInStore({ id, ingredient }, path, 'remove');
     target.parentNode.style.textDecoration = 'none';
     updateIngredientsChecked();
+  };
+
+  const favoriteRecipe = (recipe) => {
+    const favoriteRecipeObject = {
+      id: recipe.idMeal || recipe.idDrink,
+      type: path === 'meals' ? 'meal' : 'drink',
+      nationality: recipe.strArea || '',
+      category: recipe.strCategory,
+      alcoholicOrNot: path === 'meals' ? '' : 'Alcoholic',
+      name: recipe.strMeal || recipe.strDrink,
+      image: recipe.strMealThumb || recipe.strDrinkThumb,
+    };
+
+    setFavoritesRecipesInStore(favoriteRecipeObject);
+    setVisibleItem((prevState) => ({ ...prevState, favorite: !prevState.favorite }));
+  };
+
+  const shareRecipe = (recipeId) => {
+    navigator
+      .clipboard
+      .writeText(`http://localhost:3000/${path}/${recipeId}`);
+    setVisibleItem((prevState) => ({ ...prevState, share: true }));
+  };
+
+  const redirectToDoneRecipes = () => {
+    history.push('/done-recipes');
+  };
+
+  const ingredientsCheckedList = () => {
+    const ingredientsInStorage = getObjectInStore(IN_PROGRESS_RECIPES_KEY);
+
+    const objKey = url.includes('/meals') ? 'meals' : 'drinks';
+    const listOfIngredientsChecked = ingredientsInStorage[objKey][id];
+
+    return listOfIngredientsChecked;
   };
 
   return (
@@ -83,12 +140,12 @@ function RecipeInProgress() {
         ));
 
         const {
-          strMealThumb, strMeal, strCategory,
+          strMealThumb, strMeal, strCategory, idMeal,
           idDrink, strDrinkThumb, strInstructions, strDrink,
         } = recipe;
 
         return (
-          <div key={ strMeal || idDrink }>
+          <div key={ idMeal || idDrink }>
             <img
               width="350px"
               data-testid="recipe-photo"
@@ -96,15 +153,48 @@ function RecipeInProgress() {
               alt={ strMeal || strDrink }
             />
             <h2 data-testid="recipe-title">{ strMeal || strDrink }</h2>
-            <button type="button" data-testid="favorite-btn">favorite</button>
-            <button type="button" data-testid="share-btn">share</button>
+            <button
+              onClick={ () => favoriteRecipe(recipe) }
+              type="button"
+              src={
+                visibleItem.favorite
+                  ? favoriteButtonIconActive
+                  : favoriteButtonIconDisabled
+              }
+              data-testid="favorite-btn"
+            >
+              {
+                visibleItem.favorite
+                  ? <img src={ favoriteButtonIconActive } alt="favorite recipe" />
+                  : <img src={ favoriteButtonIconDisabled } alt="favorite recipe" />
+              }
+            </button>
+            <button
+              type="button"
+              data-testid="share-btn"
+              src={ shareButtonIcon }
+              onClick={ () => shareRecipe(idDrink || idMeal) }
+            >
+              {
+                visibleItem.share
+                  ? 'Link copied!'
+                  : (<img src={ shareButtonIcon } alt="share" />)
+              }
+            </button>
             <h3 data-testid="recipe-category">{ strCategory }</h3>
             <ul data-testid="instructions">
               { listToDo }
             </ul>
             <h3>Intruções</h3>
             <p>{ strInstructions }</p>
-            <button data-testid="finish-recipe-btn" type="button">Finalizar</button>
+            <button
+              disabled={ ingredientsCheckedList()?.length !== ingredients.length }
+              data-testid="finish-recipe-btn"
+              type="button"
+              onClick={ redirectToDoneRecipes }
+            >
+              Finalizar
+            </button>
           </div>
         );
       })}

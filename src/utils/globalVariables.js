@@ -2,6 +2,7 @@ export const USER_KEY = 'user';
 export const MEALS_TOKEN_KEY = 'mealsToken';
 export const DRINKS_TOKEN_KEY = 'drinksToken';
 export const IN_PROGRESS_RECIPES_KEY = 'inProgressRecipes';
+export const FAVORITE_RECIPES_KEY = 'favoriteRecipes';
 
 export const MAX_FOOD_CARDS = 12;
 export const MIN_CATEGORY_LENGTH = 5;
