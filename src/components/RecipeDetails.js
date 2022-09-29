@@ -8,7 +8,7 @@ function RecipeDetails() {
   const { id } = useParams();
   const { url } = useRouteMatch();
 
-  console.log(id);
+  
   const { setDataRecipesDetails } = useContext(RecipesDetailsContext);
 
   useEffect(() => {
