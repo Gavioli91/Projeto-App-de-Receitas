@@ -14,23 +14,31 @@ function Header() {
 
   const checkTitle = () => {
     switch (pathname) {
-    case '/meals': return setTitle('Meals');
-    case '/drinks': return setTitle('Drinks');
-    case '/profile': {
+    case '/meals':
+      setTitle('Meals');
+      setIconSearch(true);
+      break;
+
+    case '/drinks':
+      setTitle('Drinks');
+      setIconSearch(true);
+      break;
+
+    case '/profile':
       setTitle('Profile');
       setIconSearch(false);
-      return;
-    }
-    case '/done-recipes': {
+      break;
+
+    case '/done-recipes':
       setTitle('Done Recipes');
       setIconSearch(false);
-      return;
-    }
-    case '/favorite-recipes': {
+      break;
+
+    case '/favorite-recipes':
       setTitle('Favorite Recipes');
       setIconSearch(false);
-      return;
-    }
+      break;
+
     default: history.push('/notFound');
     }
   };
