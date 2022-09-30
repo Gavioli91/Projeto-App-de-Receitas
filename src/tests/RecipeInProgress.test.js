@@ -4,6 +4,8 @@ import userEvent from '@testing-library/user-event';
 import renderWithRouter from './helpers/renderWithRouter';
 import oneMeal from '../../cypress/mocks/oneMeal';
 import oneDrink from '../../cypress/mocks/oneDrink';
+import favoriteButtonIconActive from '../images/blackHeartIcon.svg';
+import favoriteButtonIconDisabled from '../images/whiteHeartIcon.svg';
 
 const mealObject = oneMeal.meals[0];
 const drinkObject = oneDrink.drinks[0];
@@ -11,23 +13,25 @@ const drinkObject = oneDrink.drinks[0];
 const mealRoute = `/meals/${mealObject.idMeal}/in-progress`;
 const drinkRoute = `/drinks/${drinkObject.idDrink}/in-progress`;
 
+const mockGlobalFetch = (json) => jest.spyOn(global, 'fetch').mockResolvedValue({
+  json: jest.fn().mockResolvedValueOnce(json),
+});
+
 describe('Tests in RecipeInProgress component', () => {
+  beforeEach(async () => {
+    mockGlobalFetch(oneMeal);
+
+    renderWithRouter(mealRoute);
+
+    await waitFor(() => expect(global.fetch).toBeCalled());
+  });
+
   afterEach(() => {
     jest.restoreAllMocks();
   });
 
   it('expects meal elements to be visible', async () => {
-    jest.spyOn(global, 'fetch').mockResolvedValue({
-      json: jest.fn().mockResolvedValueOnce(oneMeal),
-    });
-
-    renderWithRouter(mealRoute);
-
-    await waitFor(() => {
-      expect(global.fetch).toBeCalled();
-    });
-
-    const mealImage = screen.getByRole('img', { src: mealObject.strMealThumb });
+    const mealImage = screen.getByRole('img', { src: mealObject.strMealThumb, name: /Arrabiata/i });
     expect(mealImage).toBeDefined();
 
     const mealTitle = screen.getByRole('heading', { level: 2, name: mealObject.strMeal });
@@ -52,18 +56,16 @@ describe('Tests in RecipeInProgress component', () => {
 });
 
 describe('Tests in RecipeInProgress component for drinks', () => {
-  it('expects drink elements to be visible', async () => {
-    jest.spyOn(global, 'fetch').mockResolvedValue({
-      json: jest.fn().mockResolvedValueOnce(oneDrink),
-    });
+  beforeEach(async () => {
+    mockGlobalFetch(oneDrink);
 
     renderWithRouter(drinkRoute);
 
-    await waitFor(() => {
-      expect(global.fetch).toBeCalled();
-    });
+    await waitFor(() => expect(global.fetch).toBeCalled());
+  });
 
-    const drinkImage = screen.getByRole('img', { src: drinkObject.strDrinkThumb });
+  it('expects drink elements to be visible', async () => {
+    const drinkImage = screen.getByRole('img', { src: drinkObject.strDrinkThumb, name: /aquamarine/i });
     expect(drinkImage).toBeDefined();
 
     const drinkTitle = screen.getByRole('heading', { level: 2, name: drinkObject.strDrink });
@@ -81,18 +83,22 @@ describe('Tests in RecipeInProgress component for drinks', () => {
   });
 });
 
-describe('Tests functionalities in RecipeInProgress component', () => {
-  it('expect ingredient to be crossed when clicked', async () => {
-    jest.spyOn(global, 'fetch').mockResolvedValue({
-      json: jest.fn().mockResolvedValueOnce(oneDrink),
-    });
+Object.assign(navigator, {
+  clipboard: {
+    writeText: () => {},
+  },
+});
+
+describe('Tests functionalities of drinks in RecipeInProgress component', () => {
+  beforeEach(async () => {
+    jest.spyOn(navigator.clipboard, 'writeText');
+    mockGlobalFetch(oneDrink);
 
     renderWithRouter(drinkRoute);
+    await waitFor(() => expect(global.fetch).toBeCalled());
+  });
 
-    await waitFor(() => {
-      expect(global.fetch).toBeCalled();
-    });
-
+  it('expect ingredient to be crossed when clicked', async () => {
     const ingredientsListToDo = screen.getAllByRole('checkbox');
     expect(ingredientsListToDo).toHaveLength(3);
     userEvent.click(ingredientsListToDo[0]);
@@ -102,5 +108,36 @@ describe('Tests functionalities in RecipeInProgress component', () => {
 
     userEvent.click(ingredientsListToDo[0]);
     expect(ingredientClickedName).toHaveAttribute('style', 'text-decoration: none;');
+  });
+
+  it('expect recipe link to be copied when share btn is clicked', async () => {
+    const shareBtn = screen.getByRole('button', { name: 'share' });
+    expect(shareBtn).toBeDefined();
+
+    userEvent.click(shareBtn);
+    expect(navigator.clipboard.writeText)
+      .toHaveBeenCalledWith(`http://localhost:3000/drinks/${drinkObject.idDrink}`);
+  });
+
+  it('expect recipe to be favorited when favorite btn is clicked', async () => {
+    const favoriteBtn = screen.getByRole('button', { name: /favorite/i });
+    expect(favoriteBtn).toBeDefined();
+    expect(favoriteBtn).toHaveAttribute('src', favoriteButtonIconDisabled);
+
+    userEvent.click(favoriteBtn);
+    expect(favoriteBtn).toHaveAttribute('src', favoriteButtonIconActive);
+  });
+
+  it('expect finish recipe btn to enable only after all ingredients are checked', async () => {
+    const finishRecipeBtn = screen.getByRole('button', { name: /finalizar/i });
+    expect(finishRecipeBtn).toBeDisabled();
+
+    const ingredientsListToDo = screen.getAllByRole('checkbox');
+    ingredientsListToDo.forEach((ingredient) => {
+      userEvent.click(ingredient);
+      expect(ingredient).toBeChecked();
+    });
+    expect(finishRecipeBtn).toBeEnabled();
+    userEvent.click(finishRecipeBtn);
   });
 });

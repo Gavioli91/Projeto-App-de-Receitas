@@ -26,7 +26,7 @@ function RecipeDetails() {
         setMeals([]);
         const response = await getMealsDetails(id);
         setDataRecipesDetails(response.meals);
-        console.log(response);
+
         const responseDrinks = await getRecipes(DRINKS_RECIPES_END_POINT);
         setDrinks(responseDrinks);
       }

@@ -149,6 +149,7 @@ function RecipeInProgress() {
             <img
               width="350px"
               data-testid="recipe-photo"
+              name="recipe-photo"
               src={ strMealThumb || strDrinkThumb }
               alt={ strMeal || strDrink }
             />
@@ -156,6 +157,7 @@ function RecipeInProgress() {
             <button
               onClick={ () => favoriteRecipe(recipe) }
               type="button"
+              name="favorite-btn"
               src={
                 visibleItem.favorite
                   ? favoriteButtonIconActive
@@ -172,6 +174,7 @@ function RecipeInProgress() {
             <button
               type="button"
               data-testid="share-btn"
+              name="share-btn"
               src={ shareButtonIcon }
               onClick={ () => shareRecipe(idDrink || idMeal) }
             >

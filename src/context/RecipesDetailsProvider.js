@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import RecipesDetailsContext from './RecipesDetailsContext';
+import { DONE_RECIPES_KEY } from '../utils/globalVariables';
 
 function RecipesDetailsProvider({ children }) {
   const [dataRecipesDetails, setDataRecipesDetails] = useState([]);
@@ -9,7 +10,7 @@ function RecipesDetailsProvider({ children }) {
   const [startRecipeButtonVisible, setStartRecipeButtonVisible] = useState(true);
 
   const getDoneRecipes = (id) => {
-    const doneRecipesData = localStorage.getItem('doneRecipes');
+    const doneRecipesData = localStorage.getItem(DONE_RECIPES_KEY);
 
     console.log(typeof JSON.parse(doneRecipesData));
     const isRecipeDone = (JSON.parse(doneRecipesData)).some((recipe) => recipe.id === id);
