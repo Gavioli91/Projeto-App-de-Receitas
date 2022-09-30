@@ -1,4 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
+import Footer from '../components/Footer';
+import Header from '../components/Header';
 import SearchBarContext from '../context/SearchBarContext';
 import createMenu from '../utils/createMenu';
 import {
@@ -46,6 +48,7 @@ function Drinks() {
 
   return (
     <main>
+      <Header />
       <section>
         <div>
           {drinksCategorys.slice(0, MIN_CATEGORY_LENGTH).map(({ strCategory }) => (
@@ -74,6 +77,7 @@ function Drinks() {
             : createMenu(drinksCategory, 'drinks')
         }
       </section>
+      <Footer />
     </main>
   );
 }
