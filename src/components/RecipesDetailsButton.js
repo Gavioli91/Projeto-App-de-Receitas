@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import RecipesDetailsContext from '../context/RecipesDetailsContext';
 import '../styles/RecipesDetailsButton.css';
-import { START_RECIPE, CONINUE_RECIPE } from '../utils/globalVariables';
 
 function RecipesDetailsButton() {
   const { startRecipeButtonVisible, continueRecipe } = useContext(RecipesDetailsContext);

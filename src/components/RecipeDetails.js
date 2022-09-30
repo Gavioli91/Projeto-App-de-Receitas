@@ -14,8 +14,6 @@ import RecipesRecomendations from './RecipesRecomendations';
 function RecipeDetails() {
   const { id } = useParams();
   const { url } = useRouteMatch();
-  const mealId = '52977';
-  const drinkId = '17222';
 
   const { setDataRecipesDetails,
     setMeals,

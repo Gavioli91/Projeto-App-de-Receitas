@@ -33,8 +33,6 @@ function RecipesDetailsProvider({ children }) {
         recipe[0] === id));
       setContinueRecipe(isMealUnfinished);
     }
-
-    // if (isRecipeDone === true) setStartRecipeButtonVisible(false);
   };
 
   const contextValue = {
