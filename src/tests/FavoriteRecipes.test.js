@@ -1,9 +1,9 @@
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouter from './helpers/renderWithRouter';
-import { DONE_RECIPES_KEY } from '../utils/globalVariables';
+import { FAVORITE_RECIPES_KEY } from '../utils/globalVariables';
 
-const doneRecipes = [
+const favoriteRecipes = [
   {
     id: '52771',
     type: 'meal',
@@ -12,8 +12,6 @@ const doneRecipes = [
     alcoholicOrNot: '',
     name: 'Spicy Arrabiata Penne',
     image: 'https://www.themealdb.com/images/media/meals/ustsqw1468250014.jpg',
-    doneDate: '23/06/2020',
-    tags: ['Pasta', 'Curry'],
   },
   {
     id: '178319',
@@ -23,15 +21,13 @@ const doneRecipes = [
     alcoholicOrNot: 'Alcoholic',
     name: 'Aquamarine',
     image: 'https://www.thecocktaildb.com/images/media/drink/zvsre31572902738.jpg',
-    doneDate: '23/06/2020',
-    tags: [],
   },
 ];
 
 beforeEach(() => {
-  localStorage.setItem(DONE_RECIPES_KEY, JSON.stringify(doneRecipes));
+  localStorage.setItem(FAVORITE_RECIPES_KEY, JSON.stringify(favoriteRecipes));
 
-  renderWithRouter('/done-recipes');
+  renderWithRouter('/favorite-recipes');
 });
 
 afterEach(() => {
@@ -49,34 +45,35 @@ describe('Tests in DoneRecipes component', () => {
   });
 
   it('Expects to exists one meal done recipe card on screen', () => {
-    const mealObject = doneRecipes[0];
-    const mealRecipeCard = screen.getAllByRole('img', { name: /recipe/i })[0];
+    const mealObject = favoriteRecipes[0];
+    const mealRecipeCard = screen.getAllByRole('img', { name: 'Recipe' })[0];
     expect(mealRecipeCard).toHaveAttribute('src', mealObject.image);
     const mealRecipeTitle = screen.getByText(mealObject.name);
     expect(mealRecipeTitle).toBeDefined();
     const mealRecipeInfo = screen
       .getByText(`${mealObject.nationality} - ${mealObject.category}`);
     expect(mealRecipeInfo).toBeDefined();
-    const mealRecipeDoneDate = screen.getAllByText(mealObject.doneDate)[0];
-    expect(mealRecipeDoneDate).toBeDefined();
   });
 
   it('Expects to exists one meal done recipe card on screen', () => {
-    const drinkObject = doneRecipes[1];
-    const drinkRecipeCard = screen.getAllByRole('img', { name: /recipe/i })[1];
+    const drinkObject = favoriteRecipes[1];
+    const drinkRecipeCard = screen.getAllByRole('img', { name: 'Recipe' })[1];
     expect(drinkRecipeCard).toHaveAttribute('src', drinkObject.image);
     const drinkRecipeTitle = screen.getByText(drinkObject.name);
     expect(drinkRecipeTitle).toBeDefined();
     const drinkRecipeInfo = screen
       .getByText(`${drinkObject.alcoholicOrNot} - ${drinkObject.category}`);
     expect(drinkRecipeInfo).toBeDefined();
-    const drinkRecipeDoneDate = screen.getAllByText(drinkObject.doneDate)[1];
-    expect(drinkRecipeDoneDate).toBeDefined();
   });
 
-  it('Expects to exists two share button on the screen', () => {
+  it('Expects to exists two share buttons on the screen', () => {
     const shareBtns = screen.getAllByRole('img', { name: 'share' });
     expect(shareBtns).toHaveLength(2);
+  });
+
+  it('Expects to exists two favorite buttons on the screen', () => {
+    const favoriteBtns = screen.getAllByRole('img', { name: /favorite/i });
+    expect(favoriteBtns).toHaveLength(2);
   });
 });
 
@@ -91,18 +88,18 @@ describe('Testing buttons functionalities of DoneRecipes', () => {
     const buttonFilterMeals = screen.getByRole('button', { name: /meals/i });
     userEvent.click(buttonFilterMeals);
 
-    const recipeCardImages = screen.getAllByRole('img', { name: /recipe/i });
+    const recipeCardImages = screen.getAllByRole('img', { name: 'Recipe' });
     expect(recipeCardImages).not.toHaveLength(2);
-    expect(recipeCardImages[0]).toHaveAttribute('src', doneRecipes[0].image);
+    expect(recipeCardImages[0]).toHaveAttribute('src', favoriteRecipes[0].image);
   });
 
   it('Tests if when drinks button is clicked show only drinks recipes', () => {
     const buttonFilterDrinks = screen.getByRole('button', { name: /drinks/i });
     userEvent.click(buttonFilterDrinks);
 
-    const recipeCardImages = screen.getAllByRole('img', { name: /recipe/i });
+    const recipeCardImages = screen.getAllByRole('img', { name: 'Recipe' });
     expect(recipeCardImages).not.toHaveLength(2);
-    expect(recipeCardImages[0]).toHaveAttribute('src', doneRecipes[1].image);
+    expect(recipeCardImages[0]).toHaveAttribute('src', favoriteRecipes[1].image);
   });
 
   it('Tests if when all button is clicked show all recipes', async () => {
@@ -111,9 +108,9 @@ describe('Testing buttons functionalities of DoneRecipes', () => {
 
     userEvent.click(buttonFilterDrinks);
 
-    const recipeCardImages = screen.getAllByRole('img', { name: /recipe/i });
+    const recipeCardImages = screen.getAllByRole('img', { name: 'Recipe' });
     expect(recipeCardImages).not.toHaveLength(2);
-    expect(recipeCardImages[0]).toHaveAttribute('src', doneRecipes[1].image);
+    expect(recipeCardImages[0]).toHaveAttribute('src', favoriteRecipes[1].image);
 
     userEvent.click(buttonFilterAll);
 
@@ -121,8 +118,8 @@ describe('Testing buttons functionalities of DoneRecipes', () => {
       expect(screen.getAllByRole('img', { name: /share/i })).toHaveLength(2);
     });
 
-    const drinkRecipeTitle = screen.getByText(doneRecipes[1].name);
-    const mealRecipeTitle = screen.getByText(doneRecipes[0].name);
+    const drinkRecipeTitle = screen.getByText(favoriteRecipes[1].name);
+    const mealRecipeTitle = screen.getByText(favoriteRecipes[0].name);
     expect(drinkRecipeTitle && mealRecipeTitle).toBeDefined();
   });
 
@@ -132,13 +129,19 @@ describe('Testing buttons functionalities of DoneRecipes', () => {
     userEvent.click(shareBtns[0]);
 
     expect(navigator.clipboard.writeText)
-      .toHaveBeenCalledWith(`http://localhost:3000/meals/${doneRecipes[0].id}`);
+      .toHaveBeenCalledWith(`http://localhost:3000/meals/${favoriteRecipes[0].id}`);
   });
 });
 
-describe('Test if redirect to recipe page when click on recipe card', () => {
-  it('Tests if when click meal recipe card, redirect to meal recipe page', () => {
-    const mealRecipeCard = screen.getAllByRole('img', { name: /recipe/i })[0];
-    userEvent.click(mealRecipeCard);
+describe('Continue to test buttons functionalities of DoneRecipes', () => {
+  it('Tests if when click meal recipe card, redirect to meal recipe page', async () => {
+    const mealCard = screen.getAllByText('Spicy Arrabiata Penne')[0];
+    userEvent.click(mealCard);
+  });
+
+  it('Test if when click to unfavorite an recipe it removes it from the screen', () => {
+    const favoriteBtns = screen.getAllByRole('img', { name: /favorite/i });
+    userEvent.click(favoriteBtns[0]);
+    expect(favoriteBtns).toHaveLength(2);
   });
 });
