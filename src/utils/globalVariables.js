@@ -16,3 +16,5 @@ export const MEALS_CATEGORYS_END_POINT = 'https://www.themealdb.com/api/json/v1/
 export const DRINKS_CATEGORYS_END_POINT = 'https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list';
 export const MEALS_FROM_CATEGORY_END_POINT = 'https://www.themealdb.com/api/json/v1/1/filter.php?c=';
 export const DRINKS_FROM_CATEGORY_END_POINT = 'https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=';
+
+export const COPIED_LINK_SHOW_TIME = 3000;
