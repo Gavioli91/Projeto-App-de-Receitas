@@ -4,8 +4,11 @@ import PropTypes from 'prop-types';
 import RecipesDetailsContext from './RecipesDetailsContext';
 import { DONE_RECIPES_KEY, IN_PROGRESS_RECIPES_KEY } from '../utils/globalVariables';
 
+const copy = require('clipboard-copy');
+
 function RecipesDetailsProvider({ children }) {
   const history = useHistory();
+  const copyUrl = window.location.href;
 
   const [dataRecipesDetails, setDataRecipesDetails] = useState([]);
   const [meals, setMeals] = useState([]);
@@ -14,6 +17,7 @@ function RecipesDetailsProvider({ children }) {
   const [continueRecipe, setContinueRecipe] = useState(false);
   const [recipeInProgressId, setRecipeInProgressId] = useState();
   const [recipeInProgressRoute, setRecipeInProgressRoute] = useState();
+  const [isLinkCopied, setIsLinkIsCopied] = useState(false);
 
   const getDoneRecipes = (id) => {
     const doneRecipesData = localStorage.getItem(DONE_RECIPES_KEY);
@@ -27,7 +31,6 @@ function RecipesDetailsProvider({ children }) {
     const ongoingRecipes = JSON.parse(localStorage.getItem(IN_PROGRESS_RECIPES_KEY));
 
     if (url.includes('/drinks')) {
-      console.log(Object.entries(ongoingRecipes.drinks));
       const isDrinksUnfinished = Object.entries(ongoingRecipes.drinks).some((recipe) => (
         recipe[0] === id));
       setContinueRecipe(isDrinksUnfinished);
@@ -45,12 +48,17 @@ function RecipesDetailsProvider({ children }) {
     setRecipeInProgressRoute(recipeUrl);
   };
 
-  const handleStartbuttonClick = () => {
+  const handleStartButtonClick = () => {
     if (recipeInProgressRoute.includes('/meals')) {
       history.push(`/meals/${recipeInProgressId}/in-progress`);
     } else if (recipeInProgressRoute.includes('/drinks')) {
       history.push(`/drinks/${recipeInProgressId}/in-progress`);
     }
+  };
+
+  const handleShareButtonClick = () => {
+    copy(copyUrl);
+    setIsLinkIsCopied(true);
   };
 
   const contextValue = {
@@ -64,8 +72,10 @@ function RecipesDetailsProvider({ children }) {
     getDoneRecipes,
     getOngoingRecipes,
     continueRecipe,
-    handleStartbuttonClick,
+    handleStartButtonClick,
     getRecipeRouteAndId,
+    isLinkCopied,
+    handleShareButtonClick,
   };
 
   return (
