@@ -1,4 +1,8 @@
-import { FAVORITE_RECIPES_KEY, IN_PROGRESS_RECIPES_KEY } from './globalVariables';
+import {
+  DONE_RECIPES_KEY,
+  FAVORITE_RECIPES_KEY,
+  IN_PROGRESS_RECIPES_KEY,
+} from './globalVariables';
 
 const DEFAULT_IN_PROGRESS_OBJECT = {
   drinks: {},
@@ -12,6 +16,10 @@ if (!JSON.parse(localStorage.getItem(IN_PROGRESS_RECIPES_KEY))) {
 
 if (!JSON.parse(localStorage.getItem(FAVORITE_RECIPES_KEY))) {
   localStorage.setItem(FAVORITE_RECIPES_KEY, JSON.stringify([]));
+}
+
+if (!JSON.parse(localStorage.getItem(DONE_RECIPES_KEY))) {
+  localStorage.setItem(DONE_RECIPES_KEY, JSON.stringify([]));
 }
 
 export const getObjectInStore = (storeKey) => {
@@ -35,19 +43,19 @@ export const setRecipeProgressInStore = ({ id, ingredient }, key, action) => {
   localStorage.setItem(IN_PROGRESS_RECIPES_KEY, JSON.stringify(recipesObject));
 };
 
-export const setFavoritesRecipesInStore = (recipe) => {
-  const favoritesArray = getObjectInStore(FAVORITE_RECIPES_KEY);
+export const setRecipesInStore = (recipe, localStorageKey) => {
+  const recipesArray = getObjectInStore(localStorageKey);
 
-  const checkRepeatedItem = favoritesArray
-    .some((favoriteItem) => favoriteItem.id === recipe.id);
+  const checkRepeatedItem = recipesArray
+    .some((item) => item.id === recipe.id);
 
   if (checkRepeatedItem) {
-    const filteredFavoritesArray = favoritesArray
-      .filter((favoriteItem) => favoriteItem.id !== recipe.id);
+    const filteredArray = recipesArray
+      .filter((item) => item.id !== recipe.id);
 
-    localStorage.setItem(FAVORITE_RECIPES_KEY, JSON.stringify(filteredFavoritesArray));
+    localStorage.setItem(localStorageKey, JSON.stringify(filteredArray));
   } else {
-    const newFavotiresArray = [...favoritesArray, recipe];
-    localStorage.setItem(FAVORITE_RECIPES_KEY, JSON.stringify(newFavotiresArray));
+    const newArray = [...recipesArray, recipe];
+    localStorage.setItem(localStorageKey, JSON.stringify(newArray));
   }
 };

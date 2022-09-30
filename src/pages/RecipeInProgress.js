@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useHistory, useParams, useRouteMatch } from 'react-router-dom';
 import { getDrinksDetails, getMealsDetails } from '../utils/fetchRecipesDetails';
-import { FAVORITE_RECIPES_KEY, IN_PROGRESS_RECIPES_KEY } from '../utils/globalVariables';
+import {
+  DONE_RECIPES_KEY,
+  FAVORITE_RECIPES_KEY,
+  IN_PROGRESS_RECIPES_KEY,
+} from '../utils/globalVariables';
+
 import {
   setRecipeProgressInStore,
   getObjectInStore,
-  setFavoritesRecipesInStore,
+  setRecipesInStore,
 } from '../utils/localStorage';
 import shareButtonIcon from '../images/shareIcon.svg';
 import favoriteButtonIconActive from '../images/blackHeartIcon.svg';
@@ -84,7 +89,7 @@ function RecipeInProgress() {
       image: recipe.strMealThumb || recipe.strDrinkThumb,
     };
 
-    setFavoritesRecipesInStore(favoriteRecipeObject);
+    setRecipesInStore(favoriteRecipeObject, FAVORITE_RECIPES_KEY);
     setVisibleItem((prevState) => ({ ...prevState, favorite: !prevState.favorite }));
   };
 
@@ -95,7 +100,33 @@ function RecipeInProgress() {
     setVisibleItem((prevState) => ({ ...prevState, share: true }));
   };
 
-  const redirectToDoneRecipes = () => {
+  const getDate = () => {
+    const data = new Date();
+
+    const month = (data.getMonth() + 1).toString().padStart(2, '0');
+    const day = data.getDate().toString().padStart(2, '0');
+    const year = data.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
+  const getTagsFromRecipe = (tags) => {
+    if (tags) return tags.split(',');
+    return [];
+  };
+
+  const redirectToDoneRecipes = (recipe) => {
+    const doneRecipeObject = {
+      id: recipe.idMeal || recipe.idDrink,
+      type: path === 'meals' ? 'meal' : 'drink',
+      nationality: recipe.strArea || '',
+      category: recipe.strCategory,
+      alcoholicOrNot: path === 'meals' ? '' : 'Alcoholic',
+      name: recipe.strMeal || recipe.strDrink,
+      image: recipe.strMealThumb || recipe.strDrinkThumb,
+      doneDate: getDate(),
+      tags: getTagsFromRecipe(recipe.strTags),
+    };
+    setRecipesInStore(doneRecipeObject, DONE_RECIPES_KEY);
     history.push('/done-recipes');
   };
 
@@ -121,24 +152,25 @@ function RecipeInProgress() {
               id={ ingredient }
               data-testid={ `${index}-ingredient-step` }
               style={
-                ingredientsChecked?.includes(recipe[ingredient])
+                ingredientsChecked?.includes(`${recipe[ingredient]}-${index}`)
                   ? { textDecoration: 'line-through' }
                   : { textDecoration: 'none' }
               }
             >
               <input
                 type="checkbox"
-                id={ recipe[ingredient] }
+                id={ `${recipe[ingredient]}-${index}` }
                 name={ recipe[ingredient] }
                 value={ recipe[ingredient] }
-                checked={ ingredientsChecked?.includes(recipe[ingredient]) }
-                onChange={ ({ target }) => checkIngredient(target, recipe[ingredient]) }
+                checked={ ingredientsChecked?.includes(`${recipe[ingredient]}-${index}`) }
+                onChange={ ({
+                  target,
+                }) => checkIngredient(target, `${recipe[ingredient]}-${index}`) }
               />
               { recipe[ingredient] }
             </label>
           </li>
         ));
-
         const {
           strMealThumb, strMeal, strCategory, idMeal,
           idDrink, strDrinkThumb, strInstructions, strDrink,
@@ -194,7 +226,7 @@ function RecipeInProgress() {
               disabled={ ingredientsCheckedList()?.length !== ingredients.length }
               data-testid="finish-recipe-btn"
               type="button"
-              onClick={ redirectToDoneRecipes }
+              onClick={ () => redirectToDoneRecipes(recipe) }
             >
               Finalizar
             </button>
