@@ -20,6 +20,7 @@ function RecipeDetails() {
     setDrinks,
     getDoneRecipes,
     getOngoingRecipes,
+    getRecipeRouteAndId,
   } = useContext(RecipesDetailsContext);
 
   useEffect(() => {
@@ -41,6 +42,8 @@ function RecipeDetails() {
         setMeals(responseMeals);
       }
     };
+
+    getRecipeRouteAndId(id, url);
 
     const doneRecipesData = localStorage.getItem(DONE_RECIPES_KEY);
     const ongoingRecipesData = localStorage.getItem(IN_PROGRESS_RECIPES_KEY);
