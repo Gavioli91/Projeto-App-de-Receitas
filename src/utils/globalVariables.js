@@ -6,6 +6,7 @@ export const FAVORITE_RECIPES_KEY = 'favoriteRecipes';
 
 export const MAX_FOOD_CARDS = 12;
 export const MIN_CATEGORY_LENGTH = 5;
+export const MAX_CARDS_LENGTH = 6;
 export const ERROR_MESSAGE = 'Sorry, we haven\'t found any recipes for these filters.';
 
 export const MEALS_RECIPES_END_POINT = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';

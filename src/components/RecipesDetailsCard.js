@@ -3,7 +3,6 @@ import RecipesDetailsContext from '../context/RecipesDetailsContext';
 
 function RecipesDetailsCard() {
   const { dataRecipesDetails } = useContext(RecipesDetailsContext);
-  console.log(dataRecipesDetails);
 
   return (
     <div>
