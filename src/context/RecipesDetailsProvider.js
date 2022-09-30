@@ -27,7 +27,6 @@ function RecipesDetailsProvider({ children }) {
     const ongoingRecipes = JSON.parse(localStorage.getItem(IN_PROGRESS_RECIPES_KEY));
 
     if (url.includes('/drinks')) {
-      console.log(Object.entries(ongoingRecipes.drinks));
       const isDrinksUnfinished = Object.entries(ongoingRecipes.drinks).some((recipe) => (
         recipe[0] === id));
       setContinueRecipe(isDrinksUnfinished);
