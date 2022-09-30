@@ -3,7 +3,8 @@ import RecipesDetailsContext from '../context/RecipesDetailsContext';
 import '../styles/RecipesDetailsButton.css';
 
 function RecipesDetailsButton() {
-  const { startRecipeButtonVisible, continueRecipe } = useContext(RecipesDetailsContext);
+  const { startRecipeButtonVisible, continueRecipe,
+    handleStartbuttonClick } = useContext(RecipesDetailsContext);
 
   return (
     <div>
@@ -13,6 +14,7 @@ function RecipesDetailsButton() {
             data-testid="start-recipe-btn"
             type="button"
             className="button-start-recipes"
+            onClick={ handleStartbuttonClick }
           >
             { continueRecipe ? 'Continue Recipe' : 'Start Recipe'}
           </button>

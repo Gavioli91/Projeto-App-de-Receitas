@@ -1,14 +1,19 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import RecipesDetailsContext from './RecipesDetailsContext';
 import { DONE_RECIPES_KEY, IN_PROGRESS_RECIPES_KEY } from '../utils/globalVariables';
 
 function RecipesDetailsProvider({ children }) {
+  const history = useHistory();
+
   const [dataRecipesDetails, setDataRecipesDetails] = useState([]);
   const [meals, setMeals] = useState([]);
   const [drinks, setDrinks] = useState([]);
   const [startRecipeButtonVisible, setStartRecipeButtonVisible] = useState(true);
   const [continueRecipe, setContinueRecipe] = useState(false);
+  const [recipeInProgressId, setRecipeInProgressId] = useState();
+  const [recipeInProgressRoute, setRecipeInProgressRoute] = useState();
 
   const getDoneRecipes = (id) => {
     const doneRecipesData = localStorage.getItem(DONE_RECIPES_KEY);
@@ -35,6 +40,19 @@ function RecipesDetailsProvider({ children }) {
     }
   };
 
+  const getRecipeRouteAndId = (recipeId, recipeUrl) => {
+    setRecipeInProgressId(recipeId);
+    setRecipeInProgressRoute(recipeUrl);
+  };
+
+  const handleStartbuttonClick = () => {
+    if (recipeInProgressRoute.includes('/meals')) {
+      history.push(`/meals/${recipeInProgressId}/in-progress`);
+    } else if (recipeInProgressRoute.includes('/drinks')) {
+      history.push(`/drinks/${recipeInProgressId}/in-progress`);
+    }
+  };
+
   const contextValue = {
     startRecipeButtonVisible,
     dataRecipesDetails,
@@ -46,6 +64,8 @@ function RecipesDetailsProvider({ children }) {
     getDoneRecipes,
     getOngoingRecipes,
     continueRecipe,
+    handleStartbuttonClick,
+    getRecipeRouteAndId,
   };
 
   return (
