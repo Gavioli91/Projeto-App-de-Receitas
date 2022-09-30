@@ -20,6 +20,7 @@ function RecomendationsCard() {
                 data-testid={ `${index}-recommendation-card` }
                 src={ strMealThumb }
                 alt="recipe card"
+                name="recipe card"
                 width="200px"
                 className="rec-img"
               />
