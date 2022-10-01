@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import RecipesDetailsContext from '../context/RecipesDetailsContext';
+import ShareAndFavoriteButton from './ShareAndFavoriteButton';
 
 function RecipesDetailsCard() {
   const { dataRecipesDetails } = useContext(RecipesDetailsContext);
@@ -33,6 +34,9 @@ function RecipesDetailsCard() {
             <h3 data-testid="recipe-title">
               {item.strMeal || item.strDrink}
             </h3>
+
+            <ShareAndFavoriteButton />
+
             <h5 data-testid="recipe-category">
               { item.idDrink ? (item.strCategory && item.strAlcoholic) : item.strCategory}
             </h5>

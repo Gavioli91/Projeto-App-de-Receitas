@@ -2,7 +2,8 @@ import React, { useContext, useEffect } from 'react';
 import { useParams, useRouteMatch } from 'react-router-dom';
 import RecipesDetailsContext from '../context/RecipesDetailsContext';
 import { getDrinksDetails, getMealsDetails } from '../utils/fetchRecipesDetails';
-import { DRINKS_RECIPES_END_POINT,
+import { DONE_RECIPES_KEY, DRINKS_RECIPES_END_POINT,
+  IN_PROGRESS_RECIPES_KEY,
   MEALS_RECIPES_END_POINT,
 } from '../utils/globalVariables';
 import { getRecipes } from '../utils/recipesFetch';
@@ -18,6 +19,8 @@ function RecipeDetails() {
     setMeals,
     setDrinks,
     getDoneRecipes,
+    getOngoingRecipes,
+    getRecipeRouteAndId,
   } = useContext(RecipesDetailsContext);
 
   useEffect(() => {
@@ -40,9 +43,13 @@ function RecipeDetails() {
       }
     };
 
-    const doneRecipesData = localStorage.getItem('doneRecipes');
+    getRecipeRouteAndId(id, url);
+
+    const doneRecipesData = localStorage.getItem(DONE_RECIPES_KEY);
+    const ongoingRecipesData = localStorage.getItem(IN_PROGRESS_RECIPES_KEY);
 
     if (JSON.parse(doneRecipesData) !== null) getDoneRecipes(id);
+    if (JSON.parse(ongoingRecipesData) !== null) getOngoingRecipes(id, url);
     requestRecipesDetails();
   }, []);
 
