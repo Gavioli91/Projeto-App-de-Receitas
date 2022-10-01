@@ -27,8 +27,9 @@ function App() {
             <Footer />
           </Route>
 
-          <Route exact path="/profile" component={ Profile }>
+          <Route exact path="/profile">
             <Header />
+            <Profile />
             <Footer />
           </Route>
 
