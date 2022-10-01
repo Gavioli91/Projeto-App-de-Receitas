@@ -12,7 +12,6 @@ function RecipesDetailsProvider({ children }) {
   const getDoneRecipes = (id) => {
     const doneRecipesData = localStorage.getItem(DONE_RECIPES_KEY);
 
-    console.log(typeof JSON.parse(doneRecipesData));
     const isRecipeDone = (JSON.parse(doneRecipesData)).some((recipe) => recipe.id === id);
 
     if (isRecipeDone === true) setStartRecipeButtonVisible(false);
