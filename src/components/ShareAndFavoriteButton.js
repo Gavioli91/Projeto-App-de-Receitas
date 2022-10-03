@@ -1,18 +1,29 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import RecipesDetailsContext from '../context/RecipesDetailsContext';
 import shareIcon from '../images/shareIcon.svg';
 import whiteHeartIcon from '../images/whiteHeartIcon.svg';
+import blackHeartIcon from '../images/blackHeartIcon.svg';
 
 function ShareAndFavoriteButton() {
-  const { handleShareButtonClick, isLinkCopied } = useContext(RecipesDetailsContext);
+  const { handleShareButtonClick,
+    handleFavoriteButtonClick,
+    isLinkCopied,
+    VerifyIfRecipesIsFavorite,
+    blackHearth,
+  } = useContext(RecipesDetailsContext);
+
+  useEffect(() => {
+    VerifyIfRecipesIsFavorite();
+  }, []);
 
   return (
     <div>
       <input
         type="image"
-        src={ whiteHeartIcon }
+        src={ blackHearth ? blackHeartIcon : whiteHeartIcon }
         alt="whiteHeartIcon icon"
         data-testid="favorite-btn"
+        onClick={ handleFavoriteButtonClick }
       />
 
       {' '}
