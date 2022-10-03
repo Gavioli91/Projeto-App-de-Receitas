@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import shareButtonIcon from '../images/shareIcon.svg';
+import favoriteButtonIconActive from '../images/blackHeartIcon.svg';
 
-function DoneRecipesCard({ recipe, index }) {
+function DoneRecipesCard({ recipe, index, showItem, unfavoriteRecipe }) {
   const [visibleItem, setVisibleItem] = useState({ share: false });
 
   const history = useHistory();
@@ -40,12 +41,14 @@ function DoneRecipesCard({ recipe, index }) {
             { recipe.name }
           </span>
         </button>
-        <span>
-          Feita em
-          <span data-testid={ `${index}-horizontal-done-date` }>
-            { recipe.doneDate }
+        { !showItem && (
+          <span>
+            Feita em
+            <span data-testid={ `${index}-horizontal-done-date` }>
+              { recipe.doneDate }
+            </span>
           </span>
-        </span>
+        )}
         <div>
           {
             recipe.tags && recipe.tags
@@ -72,6 +75,17 @@ function DoneRecipesCard({ recipe, index }) {
               : (<img src={ shareButtonIcon } alt="share" />)
           }
         </button>
+        { showItem && (
+          <button
+            onClick={ () => unfavoriteRecipe(recipe) }
+            type="button"
+            name="favorite-btn"
+            src={ favoriteButtonIconActive }
+            data-testid={ `${index}-horizontal-favorite-btn` }
+          >
+            <img src={ favoriteButtonIconActive } alt="favorite recipe" />
+          </button>
+        )}
       </div>
 
     </section>
@@ -81,6 +95,12 @@ function DoneRecipesCard({ recipe, index }) {
 DoneRecipesCard.propTypes = {
   recipe: PropTypes.shape().isRequired,
   index: PropTypes.number.isRequired,
+  showItem: PropTypes.bool.isRequired,
+  unfavoriteRecipe: PropTypes.func,
+};
+
+DoneRecipesCard.defaultProps = {
+  unfavoriteRecipe: () => {},
 };
 
 export default DoneRecipesCard;
