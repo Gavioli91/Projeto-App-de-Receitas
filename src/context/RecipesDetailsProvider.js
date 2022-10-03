@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import RecipesDetailsContext from './RecipesDetailsContext';
-import { DONE_RECIPES_KEY, IN_PROGRESS_RECIPES_KEY } from '../utils/globalVariables';
+import { DONE_RECIPES_KEY,
+  IN_PROGRESS_RECIPES_KEY,
+  FAVORITE_RECIPES_KEY,
+} from '../utils/globalVariables';
+import { getObjectInStore, setRecipesInStore } from '../utils/localStorage';
 
 const copy = require('clipboard-copy');
 
@@ -18,6 +22,7 @@ function RecipesDetailsProvider({ children }) {
   const [recipeInProgressId, setRecipeInProgressId] = useState();
   const [recipeInProgressRoute, setRecipeInProgressRoute] = useState();
   const [isLinkCopied, setIsLinkIsCopied] = useState(false);
+  const [blackHearth, setBlackHearth] = useState(false);
 
   const getDoneRecipes = (id) => {
     const doneRecipesData = localStorage.getItem(DONE_RECIPES_KEY);
@@ -61,9 +66,45 @@ function RecipesDetailsProvider({ children }) {
     setIsLinkIsCopied(true);
   };
 
+  const createFavoriteRecipe = (recipe) => {
+    const favoriteRecipeObject = {
+      id: recipe.idMeal || recipe.idDrink,
+      type: recipe.idMeal ? 'meal' : 'drink',
+      nationality: recipe.strArea || '',
+      category: recipe.strCategory,
+      alcoholicOrNot: recipe.idDrink
+        ? recipe.strAlcoholic : '',
+      name: recipe.strMeal || recipe.strDrink,
+      image: recipe.strMealThumb || recipe.strDrinkThumb,
+    };
+
+    return favoriteRecipeObject;
+  };
+
+  const VerifyIfRecipesIsFavorite = () => {
+    const recipes = getObjectInStore(FAVORITE_RECIPES_KEY);
+
+    recipes.forEach((item) => {
+      const itemId = dataRecipesDetails[0].idMeal || dataRecipesDetails[0].idDrink;
+      if (item.id === itemId) {
+        setBlackHearth(true);
+        return;
+      }
+      setBlackHearth(false);
+    });
+
+    if (recipes.length === 0) setBlackHearth(false);
+  };
+
+  const handleFavoriteButtonClick = () => {
+    setRecipesInStore(createFavoriteRecipe(dataRecipesDetails[0]), FAVORITE_RECIPES_KEY);
+    VerifyIfRecipesIsFavorite();
+  };
+
   const contextValue = {
     startRecipeButtonVisible,
     dataRecipesDetails,
+    blackHearth,
     setDataRecipesDetails,
     meals,
     setMeals,
@@ -76,6 +117,8 @@ function RecipesDetailsProvider({ children }) {
     getRecipeRouteAndId,
     isLinkCopied,
     handleShareButtonClick,
+    handleFavoriteButtonClick,
+    VerifyIfRecipesIsFavorite,
   };
 
   return (

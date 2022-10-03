@@ -3,6 +3,7 @@ import { getObjectInStore } from '../utils/localStorage';
 import { DONE_RECIPES_KEY } from '../utils/globalVariables';
 import Header from '../components/Header';
 import DoneRecipesCard from '../components/DoneRecipesCard';
+import RecipesFilterByType from '../components/RecipesFilterByType';
 
 function DoneRecipes() {
   const [doneRecipes, setDoneRecipes] = useState([]);
@@ -24,44 +25,17 @@ function DoneRecipes() {
     setRecipesFiltered(recipesTypes);
   };
 
-  const filterRecipes = (type) => {
-    switch (type) {
-    case 'Drinks':
-      return filterRecipesByType('drink');
-    case 'Meals':
-      return filterRecipesByType('meal');
-    default:
-      return filterRecipesByType('all');
-    }
-  };
-
   return (
     <main>
       <Header />
-      <button
-        onClick={ () => filterRecipes('All') }
-        type="button"
-        data-testid="filter-by-all-btn"
-      >
-        All
-      </button>
-      <button
-        onClick={ () => filterRecipes('Meals') }
-        type="button"
-        data-testid="filter-by-meal-btn"
-      >
-        Meals
-      </button>
-      <button
-        onClick={ () => filterRecipes('Drinks') }
-        type="button"
-        data-testid="filter-by-drink-btn"
-      >
-        Drinks
-      </button>
-
+      <RecipesFilterByType filterRecipes={ filterRecipesByType } />
       {recipesFiltered && recipesFiltered.map((recipe, index) => (
-        <DoneRecipesCard key={ index } index={ index } recipe={ recipe } />
+        <DoneRecipesCard
+          key={ index }
+          showItem={ false }
+          index={ index }
+          recipe={ recipe }
+        />
       )) }
     </main>
   );
