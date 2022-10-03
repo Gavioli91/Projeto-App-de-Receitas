@@ -137,13 +137,11 @@ describe('Testing buttons functionalities of DoneRecipes', () => {
 });
 
 describe('Test if redirect to recipe page when click on recipe card', () => {
-  it('Tests if when click meal recipe card, redirect to meal recipe page', () => {
-    const { history } = renderWithRouter('/done-recipes');
-
+  it('Tests if when click meal recipe card, redirect to meal recipe page', async () => {
     const mealRecipeCard = screen.getAllByRole('img', { name: /recipe/i })[0];
     userEvent.click(mealRecipeCard);
-
-    const { location: { pathname } } = history;
-    expect(pathname).toBe(`/meals/${doneRecipes[0].id}`);
+    await waitFor(() => {
+      expect(screen.getAllByRole('listitem')).toHaveLength(8);
+    });
   });
 });

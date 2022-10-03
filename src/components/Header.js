@@ -14,11 +14,6 @@ function Header() {
 
   const checkTitle = () => {
     switch (pathname) {
-    case '/meals':
-      setTitle('Meals');
-      setIconSearch(true);
-      break;
-
     case '/drinks':
       setTitle('Drinks');
       setIconSearch(true);
@@ -39,7 +34,9 @@ function Header() {
       setIconSearch(false);
       break;
 
-    default: history.push('/notFound');
+    default:
+      setTitle('Meals');
+      setIconSearch(true);
     }
   };
 
