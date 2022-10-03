@@ -6,18 +6,14 @@ const MIN_PASSWORD_LENGTH = 6;
 
 function Login() {
   const history = useHistory();
+
   const [input, setInput] = useState({ email: '', password: '' });
-  const [enableButton, setSubmitButton] = useState(true);
 
   const validateForm = () => {
     const { email, password } = input;
     const validateEmail = email.match(/\S+@\S+\.\S+/);
     const validatePassword = password.length > MIN_PASSWORD_LENGTH;
-    if (validateEmail && validatePassword) {
-      setSubmitButton(false);
-    } else {
-      setSubmitButton(true);
-    }
+    return !(validateEmail && validatePassword);
   };
 
   const handleChange = ({ target: { name, value } }) => {
@@ -59,7 +55,7 @@ function Login() {
         />
       </label>
       <button
-        disabled={ enableButton }
+        disabled={ validateForm() }
         data-testid="login-submit-btn"
         type="submit"
       >

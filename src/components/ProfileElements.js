@@ -10,7 +10,6 @@ import { DONE_RECIPES_KEY,
 
 function ProfileElements() {
   const history = useHistory();
-  const { email } = JSON.parse(localStorage.getItem(USER_KEY));
 
   const handleClickLogout = () => {
     localStorage.removeItem(USER_KEY);
@@ -24,8 +23,6 @@ function ProfileElements() {
 
   return (
     <div>
-      <p data-testid="profile-email">{email}</p>
-
       <button
         type="button"
         data-testid="profile-done-btn"
