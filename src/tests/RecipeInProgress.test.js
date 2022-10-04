@@ -49,6 +49,9 @@ describe('Tests in RecipeInProgress component', () => {
 
     expect(favoriteBtn && shareBtn && finishRecipeBtn).toBeDefined();
 
+    userEvent.click(favoriteBtn);
+    userEvent.click(shareBtn);
+
     const mealParagraphText = /Add the chopped tomatoes, red chile flakes, Italian seasoning and salt and pepper to taste/i;
     const mealPrepareInstructionText = screen.getByText(mealParagraphText);
     expect(mealPrepareInstructionText).toBeDefined();
@@ -139,5 +142,36 @@ describe('Tests functionalities of drinks in RecipeInProgress component', () => 
     });
     expect(finishRecipeBtn).toBeEnabled();
     userEvent.click(finishRecipeBtn);
+  });
+});
+
+describe('Tests functionalities of meals in RecipeInProgress component', () => {
+  beforeEach(async () => {
+    jest.spyOn(navigator.clipboard, 'writeText');
+    mockGlobalFetch(oneMeal);
+
+    renderWithRouter(mealRoute);
+    await waitFor(() => expect(global.fetch).toBeCalled());
+  });
+
+  it('expect ingredient to be crossed when clicked', async () => {
+    const ingredientsListToDo = screen.getAllByRole('checkbox');
+    expect(ingredientsListToDo).toHaveLength(8);
+    userEvent.click(ingredientsListToDo[0]);
+
+    const ingredientClickedName = screen.getByText('penne rigate');
+    expect(ingredientClickedName).toHaveAttribute('style', 'text-decoration: line-through;');
+
+    userEvent.click(ingredientsListToDo[0]);
+    expect(ingredientClickedName).toHaveAttribute('style', 'text-decoration: none;');
+  });
+
+  it('expect recipe link to be copied when share btn is clicked', async () => {
+    const shareBtn = screen.getByRole('button', { name: 'share' });
+    expect(shareBtn).toBeDefined();
+
+    userEvent.click(shareBtn);
+    expect(navigator.clipboard.writeText)
+      .toHaveBeenCalledWith(`http://localhost:3000/meals/${mealObject.idMeal}`);
   });
 });
