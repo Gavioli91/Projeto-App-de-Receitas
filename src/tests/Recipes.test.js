@@ -6,6 +6,7 @@ import mealsMock from '../../cypress/mocks/meals';
 import oneMeal from '../../cypress/mocks/oneMeal';
 import mealsCategoryMock from '../../cypress/mocks/mealCategories';
 import drinks from '../../cypress/mocks/drinks';
+import beefMeals from '../../cypress/mocks/beefMeals';
 // import { MEALS_CATEGORYS_END_POINT, MEALS_RECIPES_END_POINT } from '../utils/globalVariables';
 
 describe('Tests Meals component', () => {
@@ -52,5 +53,29 @@ describe('Tests Meals component', () => {
 
     const { location: { pathname } } = history;
     expect(pathname).toBe('/meals/52977');
+  });
+});
+
+describe('Tests of filter buttons', () => {
+  it('Tests filter buttons', async () => {
+    jest.spyOn(global, 'fetch').mockResolvedValue({
+      json: jest.fn().mockResolvedValueOnce(mealsMock)
+        .mockResolvedValueOnce(mealsCategoryMock).mockResolvedValue(beefMeals),
+    });
+    renderWithRouter('/meals');
+
+    await waitFor(() => expect(global.fetch).toHaveBeenCalledTimes(2));
+
+    const beefFilterBtn = screen.getByRole('button', { name: /beef/i });
+    const allFilterBtn = screen.getByRole('button', { name: /all/i });
+    userEvent.click(beefFilterBtn);
+
+    await waitFor(() => {
+      expect(global.fetch).toHaveBeenCalled();
+    });
+    expect(screen.getByText('Beef and Mustard Pie')).toBeDefined();
+
+    userEvent.click(allFilterBtn);
+    expect(screen.getByText('Corba')).toBeDefined();
   });
 });

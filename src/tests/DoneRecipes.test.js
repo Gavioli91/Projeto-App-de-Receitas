@@ -1,7 +1,7 @@
 import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouter from './helpers/renderWithRouter';
-import { DONE_RECIPES_KEY } from '../utils/globalVariables';
+import { DONE_RECIPES_KEY, FAVORITE_RECIPES_KEY } from '../utils/globalVariables';
 
 const doneRecipes = [
   {
@@ -138,6 +138,8 @@ describe('Testing buttons functionalities of DoneRecipes', () => {
 
 describe('Test if redirect to recipe page when click on recipe card', () => {
   it('Tests if when click meal recipe card, redirect to meal recipe page', async () => {
+    localStorage.setItem(FAVORITE_RECIPES_KEY, JSON.stringify([]));
+
     const mealRecipeCard = screen.getAllByRole('img', { name: /recipe/i })[0];
     userEvent.click(mealRecipeCard);
     await waitFor(() => {

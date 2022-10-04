@@ -1,5 +1,6 @@
 import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { USER_KEY } from '../utils/globalVariables';
 import renderWithRouter from './helpers/renderWithRouter';
 
 describe('Tests for Profile screen', () => {
@@ -46,5 +47,11 @@ describe('Tests for Profile screen', () => {
 
     const { location: { pathname } } = history;
     expect(pathname).toBe('/');
+  });
+
+  it('Expect to show user email on screen', () => {
+    localStorage.setItem(USER_KEY, JSON.stringify({ email: 'email@gmail.com' }));
+    renderWithRouter('/profile');
+    expect(screen.getByText('email@gmail.com')).toBeDefined();
   });
 });

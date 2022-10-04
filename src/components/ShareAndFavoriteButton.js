@@ -21,7 +21,7 @@ function ShareAndFavoriteButton() {
       <input
         type="image"
         src={ blackHearth ? blackHeartIcon : whiteHeartIcon }
-        alt="whiteHeartIcon icon"
+        alt="Favorite icon"
         data-testid="favorite-btn"
         onClick={ handleFavoriteButtonClick }
       />
